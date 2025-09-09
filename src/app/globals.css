@@ -1,26 +1,196 @@
+/* Tailwind v4: un solo import */
 @import "tailwindcss";
 
+
+/* =========================
+   THEME TOKENS (Tailwind v4)
+   - Definen colores y tokens reutilizables
+   - Generan utilidades como bg-dark, text-medical-blue, etc.
+========================= */
+@theme {
+  /* Colores marca */
+  --color-dark: #0f0e17;          /* Fondo principal (Hero, Footer) */
+  --color-medical-blue: #2D9CDB;  /* CTA primario, enlaces, "Farma" */
+  --color-health-green: #27AE60;  /* Secundario/éxito, "fy" */
+  --color-accent-gold: #d4af37;   /* Acento premium/check logo */
+  --color-soft-pink: #ffd1dc;     /* Secciones humanas/testimonios */
+  --color-white: #FFFFFF;         /* Texto sobre oscuro, cards limpias */
+  --color-light-gray: #F5F5F5;    /* Bordes/divisores/fondos alternos */
+
+  /* Tipografía base (puedes sustituir por Inter si ya la cargas) */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+               Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji",
+               "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Radios y sombras de diseño */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+  --shadow-card: 0 4px 10px rgba(0, 0, 0, 0.08);
+
+  /* Anchos útiles */
+  --container: 72rem; /* ~ max-w-7xl (ajústalo a gusto) */
+}
+
+/* =========================
+   MODO CLARO/OSCURO (opcional)
+========================= */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --page-bg: var(--color-white);
+  --page-fg: var(--color-dark);
 }
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: dark;
+    /* Si quieres modo oscuro real, cambia estos dos tokens: */
+    --page-bg: var(--color-dark);
+    --page-fg: var(--color-white);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* =========================
+   BASE GLOBAL
+========================= */
+html, body {
+  background: var(--page-bg);
+  color: var(--page-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  height: 100%;
+}
+
+/* Enlaces con estilo por defecto (puedes afinar luego) */
+a {
+  color: var(--color-medical-blue);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* =========================
+   AYUDAS DE LAYOUT
+========================= */
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: 1rem;       /* px-4 */
+}
+@media (min-width: 640px) {    /* sm */
+  .container { padding-inline: 1.5rem; } /* sm:px-6 */
+}
+@media (min-width: 1024px) {   /* lg */
+  .container { padding-inline: 2rem; }   /* lg:px-8 */
+}
+
+/* Secciones verticales estándar */
+.section {
+  padding-block: 4rem;     /* py-16 */
+}
+@media (min-width: 640px) {
+  .section { padding-block: 6rem; } /* sm:py-24 */
+}
+
+/* Títulos y subtítulos por defecto */
+.section-title {
+  font-size: 1.875rem;     /* text-3xl */
+  line-height: 2.25rem;
+  font-weight: 700;        /* font-bold */
+  color: var(--color-dark);
+  margin-bottom: 1.5rem;
+}
+.section-subtitle {
+  font-size: 1.125rem;     /* text-lg */
+  line-height: 1.75rem;
+  color: #4b5563;          /* ~ text-gray-600 */
+  margin-bottom: 3rem;
+}
+
+/* =========================
+   COMPONENTES BASE (sin @apply)
+   - Botones, Cards y etiquetas rápidas
+========================= */
+
+/* Botón base */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  border-radius: var(--radius-xl);
+  padding: 0.5rem 1rem;  /* py-2 px-4 */
+  transition: background-color .2s ease, color .2s ease, box-shadow .2s ease;
+  outline: none;
+  border: 1px solid transparent;
+}
+
+/* Primario (azul) */
+.btn-primary {
+  background-color: var(--color-medical-blue);
+  color: var(--color-white);
+}
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+.btn-primary:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-medical-blue) 45%, white);
+}
+
+/* Secundario (verde) */
+.btn-secondary {
+  background-color: var(--color-health-green);
+  color: var(--color-white);
+}
+.btn-secondary:hover {
+  filter: brightness(0.95);
+}
+.btn-secondary:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-health-green) 45%, white);
+}
+
+/* Outline (neutro) */
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-dark);
+  border-color: var(--color-light-gray);
+}
+.btn-outline:hover {
+  background-color: var(--color-light-gray);
+}
+.btn-outline:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-dark) 25%, white);
+}
+
+/* Card */
+.card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--color-light-gray);
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem; /* p-6 */
+}
+
+/* Helpers de color/acento */
+.text-accent { color: var(--color-accent-gold); }
+.bg-accent   { background-color: var(--color-accent-gold); color: var(--color-white); }
+.bg-soft     { background-color: var(--color-soft-pink); }
+.text-soft   { color: var(--color-soft-pink); }
+
+/* Separadores por defecto */
+.border-default {
+  border: 1px solid var(--color-light-gray);
+}
+
+/* =========================
+   FOOTER / HERO (fondos típicos)
+========================= */
+.hero-dark,
+.footer-dark {
+  background-color: var(--color-dark);
+  color: var(--color-white);
 }
