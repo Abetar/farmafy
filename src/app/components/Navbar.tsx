@@ -1,95 +1,115 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const close = () => setOpen(false);
 
   return (
     <header
       role="banner"
-      className={`sticky top-0 inset-x-0 z-50 transition-colors duration-300 ${
-        isScrolled
-          ? "bg-white/90 backdrop-blur border-b border-default shadow-sm"
-          : "bg-transparent"
-      }`}
+      className="sticky top-0 inset-x-0 z-50 bg-[color:#0f0e17]/95 backdrop-blur border-b border-white/10"
     >
       <nav className="container h-16 flex items-center justify-between">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-2" aria-label="Farmafy inicio">
-          <span className="text-2xl font-bold tracking-tight">
+        <Link href="/" className="flex items-center gap-2" aria-label="Farmafy inicio" onClick={close}>
+          <span className="text-2xl font-bold tracking-tight text-white">
             <span className="text-medical-blue">Farma</span>
             <span className="text-health-green">fy</span>
           </span>
           <span aria-hidden className="inline-block w-2.5 h-2.5 rounded-full bg-accent" />
         </Link>
 
-        {/* Links desktop */}
-        <div className="hidden sm:flex items-center gap-4">
-          <NavLink href="/pricing" isScrolled={isScrolled}>Precios</NavLink>
-          <NavLink href="/features" isScrolled={isScrolled}>Funciones</NavLink>
-          <NavLink href="/security" isScrolled={isScrolled}>Seguridad</NavLink>
-          <NavLink href="/contact" isScrolled={isScrolled}>Contacto</NavLink>
+        {/* Desktop links */}
+        <div className="hidden md:flex items-center gap-4">
+          <NavLink href="/pricing">Precios</NavLink>
+          <NavLink href="/features">Funciones</NavLink>
+          <NavLink href="/security">Seguridad</NavLink>
+          <NavLink href="/contact">Contacto</NavLink>
 
-          <div className={`h-5 w-px ${isScrolled ? "bg-lightGray" : "bg-white/30"}`} />
+          <div className="h-5 w-px bg-white/20" />
 
-          {/* Iniciar sesión: ghost claro sobre hero, outline normal al scrollear */}
-          {isScrolled ? (
-            <Link href="/login" className="btn btn-outline text-sm">
-              Iniciar sesión
-            </Link>
-          ) : (
-            <Link
-              href="/login"
-              className="text-sm rounded-xl px-4 py-2 border transition-colors
-                         border-white/70 text-white hover:bg-white/10 focus:outline-none
-                         focus-visible:ring-2 focus-visible:ring-white/60"
+          <Link
+            href="/login"
+            className="text-sm rounded-xl px-4 py-2 border border-white/70 text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+          >
+            Iniciar sesión
+          </Link>
+          <Link href="/signup" className="btn btn-primary text-sm">
+            Probar gratis
+          </Link>
+        </div>
+
+        {/* Mobile toggle */}
+        <button
+          type="button"
+          className="md:hidden inline-flex items-center justify-center rounded-xl border border-white/30 text-white/90 px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+          aria-label="Abrir menú"
+          aria-expanded={open}
+          aria-controls="mobile-menu"
+          onClick={() => setOpen((v) => !v)}
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+            {open ? (
+              <path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
+            ) : (
+              <path fill="currentColor" d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
+            )}
+          </svg>
+        </button>
+      </nav>
+
+      {/* Mobile menu */}
+      {open && (
+        <div id="mobile-menu" className="md:hidden border-t border-white/10 bg-[color:#0f0e17]/95">
+          <div className="container py-4 flex flex-col gap-2">
+            <MobileLink href="/pricing" onClick={close}>Precios</MobileLink>
+            <MobileLink href="/features" onClick={close}>Funciones</MobileLink>
+            <MobileLink href="/security" onClick={close}>Seguridad</MobileLink>
+            <MobileLink href="/contact" onClick={close}>Contacto</MobileLink>
+
+            <div className="h-px w-full bg-white/10 my-2" />
+
+            <Link href="/login" onClick={close}
+              className="w-full text-sm rounded-xl px-4 py-2 border border-white/70 text-white hover:bg-white/10 text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
             >
               Iniciar sesión
             </Link>
-          )}
-
-          <Link href="/signup" className="btn btn-primary text-sm">
-            Probar gratis
-          </Link>
+            <Link href="/signup" onClick={close} className="w-full btn btn-primary text-sm text-center">
+              Probar gratis
+            </Link>
+          </div>
         </div>
-
-        {/* Mobile action */}
-        <div className="sm:hidden">
-          <Link href="/signup" className="btn btn-primary text-sm">
-            Probar gratis
-          </Link>
-        </div>
-      </nav>
+      )}
     </header>
   );
 }
 
-function NavLink({
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <Link href={href} className="text-sm text-white/85 hover:text-white transition-colors px-2 py-1 rounded">
+      {children}
+    </Link>
+  );
+}
+
+function MobileLink({
   href,
+  onClick,
   children,
-  isScrolled,
 }: {
   href: string;
+  onClick?: () => void;
   children: React.ReactNode;
-  isScrolled: boolean;
 }) {
   return (
     <Link
       href={href}
-      className={`text-sm px-2 py-1 rounded transition-colors ${
-        isScrolled
-          ? "text-dark/70 hover:text-medical-blue"
-          : "text-white/85 hover:text-white"
-      }`}
+      onClick={onClick}
+      className="py-2 text-white/90 hover:text-white transition-colors"
     >
       {children}
     </Link>

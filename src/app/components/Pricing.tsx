@@ -124,10 +124,10 @@ export default function Pricing() {
       <div className="container">
         {/* Encabezado */}
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="section-title" style={{ color: "white" }}>
+          <h2 className="section-title" style={{ color: "black", fontWeight: 'bold' , fontSize: '2.5rem' }}>
             Planes y precios
           </h2>
-          <p className="section-subtitle" style={{ color: "white" }}>
+          <p className="section-subtitle" style={{ color: "black" }}>
             Elige el plan que se ajuste a tu práctica. Comienza con una prueba
             gratuita y escala cuando lo necesites.
           </p>
